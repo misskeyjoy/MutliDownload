@@ -53,7 +53,7 @@ public class ThreadDAoImp implements  ThreadDAO {
      * @param isFinished 是否下载完成
      */
     @Override
-    public void updateThreadInfo(String url, int thread_id, boolean isFinished) {
+    public void updateThreadInfo(String url, int thread_id, int isFinished) {
         SQLiteDatabase db=mHelper.getWritableDatabase();
         db.execSQL("update  thread_info set finished=? where url=? and thread_id=?",new Object[]{isFinished,url,thread_id});
         db.close();
@@ -68,19 +68,20 @@ public class ThreadDAoImp implements  ThreadDAO {
     @Override
     public List<ThreadInfo> getThread(String url) {
         List<ThreadInfo> list =new ArrayList<>();
-        SQLiteDatabase db=mHelper.getWritableDatabase();
+        SQLiteDatabase db=mHelper.getReadableDatabase();
         Cursor cursor=db.rawQuery("select * from thread_info where url=?", new String[]{url});
         while(cursor.moveToNext()){
             ThreadInfo threadInfo=new ThreadInfo();
             threadInfo.setId(cursor.getInt(cursor.getColumnIndex("thread_id")));
             threadInfo.setUrl(cursor.getString(cursor.getColumnIndex("url")));
-            threadInfo.setId(cursor.getInt(cursor.getColumnIndex("thread_id")));
-            threadInfo.setId(cursor.getInt(cursor.getColumnIndex("thread_id")));
+            threadInfo.setStart(cursor.getInt(cursor.getColumnIndex("start")));
+            threadInfo.setEnd(cursor.getInt(cursor.getColumnIndex("end")));
             threadInfo.setIsFinish(cursor.getInt(cursor.getColumnIndex("finished")));
-
+           list.add(threadInfo);
         }
+        cursor.close();
         db.close();
-        return null;
+        return list;
     }
 
     /**
@@ -92,6 +93,12 @@ public class ThreadDAoImp implements  ThreadDAO {
      */
     @Override
     public boolean isExits(String url, int thread_id) {
-        return false;
+        SQLiteDatabase db=mHelper.getReadableDatabase();
+        Cursor cursor=db.rawQuery("select * from thread_info where url=? andt thread_id=?", new String[]{url,
+                  thread_id+""});
+        boolean exits=cursor.moveToNext();
+        cursor.close();
+        db.close();
+        return exits;
     }
 }
