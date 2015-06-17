@@ -28,7 +28,7 @@ public interface ThreadDAO {
      * @param thread_id 线程id
      * @param isFinished 是否下载完成
      */
-    public  void updateThreadInfo(String url,int thread_id,boolean isFinished);
+    public  void updateThreadInfo(String url,int thread_id,int isFinished);
 
     /**
      * 返回线程信息的list集合

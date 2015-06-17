@@ -73,6 +73,10 @@ public class ThreadDAoImp implements  ThreadDAO {
         while(cursor.moveToNext()){
             ThreadInfo threadInfo=new ThreadInfo();
             threadInfo.setId(cursor.getInt(cursor.getColumnIndex("thread_id")));
+            threadInfo.setUrl(cursor.getString(cursor.getColumnIndex("url")));
+            threadInfo.setId(cursor.getInt(cursor.getColumnIndex("thread_id")));
+            threadInfo.setId(cursor.getInt(cursor.getColumnIndex("thread_id")));
+            threadInfo.setIsFinish(cursor.getInt(cursor.getColumnIndex("finished")));
 
         }
         db.close();

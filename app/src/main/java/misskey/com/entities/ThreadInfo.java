@@ -9,7 +9,7 @@ public class ThreadInfo {
     private String url;
     private int start;
     private int end;
-    private boolean isFinish;
+    private int isFinish;
     public  ThreadInfo(){
         super();
     }
@@ -25,7 +25,7 @@ public class ThreadInfo {
                 '}';
     }
 
-    public  ThreadInfo(int id, String url,int start,int end,boolean isFinish){
+    public  ThreadInfo(int id, String url,int start,int end,int isFinish){
         this.id=id;
         this.end=end;
         this.start=start;
@@ -60,7 +60,7 @@ public class ThreadInfo {
         this.end = end;
     }
 
-    public void setIsFinish(boolean isFinish) {
+    public void setIsFinish(int isFinish) {
         this.isFinish = isFinish;
     }
 
