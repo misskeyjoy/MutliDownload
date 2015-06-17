@@ -1,7 +1,10 @@
 package misskey.com.download_demo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPbProgrgss= (ProgressBar) findViewById(R.id.pbprogressBar);
+        mPbProgrgss.setMax(100);
         mBtStart= (Button) findViewById(R.id.btstart);
         mBtStop= (Button) findViewById(R.id.btstop);
         mTvFileName= (TextView) findViewById(R.id.tv_filename);
@@ -35,6 +39,7 @@ public class MainActivity extends Activity {
                 "imooc.apk",0,false
                 );
         //创建事件监听
+        mTvFileName.setText(fileInfo.getFileName());
         mBtStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +62,16 @@ public class MainActivity extends Activity {
 
             }
         });
+        //注册广播接收器
+        IntentFilter filter=new IntentFilter();
+        filter.addAction(DownLoadService.ACTION_UPDATE);
+        registerReceiver(mReciver,filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReciver);
     }
 
     @Override
@@ -80,4 +95,17 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * 更新UI的广播接收器
+     */
+    BroadcastReceiver mReciver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(DownLoadService.ACTION_UPDATE.equals(intent.getAction())){
+                int finished=intent.getIntExtra("fininshed",0);
+                mPbProgrgss.setProgress(finished);
+            }
+        }
+    };
 }

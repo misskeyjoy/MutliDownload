@@ -8,17 +8,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-
-import org.apache.http.HttpConnection;
 import org.apache.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.util.RandomAccess;
 
 
 import misskey.com.entities.FileInfo;
@@ -29,7 +25,9 @@ import misskey.com.entities.FileInfo;
 public class DownLoadService extends Service {
     public  static final String ACTION_START="ACTION_START";
     public  static final String ACTION_STOP="ACTION_STOP";
+    public static final  String ACTION_UPDATE="ACTION_UPDATE";
     public  static  final  int MSG_INt=0;
+    private DownloadTask mTask;
     public  static final  String DOWNLOAD_PATH= Environment.getExternalStorageDirectory().getAbsolutePath()+"/downloads/";
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -42,6 +40,9 @@ public class DownLoadService extends Service {
         }else if(ACTION_STOP.equals(intent.getAction())){
             FileInfo fileInfo= (FileInfo) intent.getSerializableExtra("fileinfo");
             Log.i("test","Stop"+fileInfo.toString());
+            if(mTask!=null){
+                mTask.isPaused=true;
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -77,6 +78,9 @@ public class DownLoadService extends Service {
                case MSG_INt:
                     FileInfo fileInfo= (FileInfo) msg.obj;
                    Log.i("test","Init:"+fileInfo);
+                   //启动下载任务
+                   mTask=new DownloadTask(DownLoadService.this,fileInfo);
+                   mTask.download();
                    break;
            }
         }

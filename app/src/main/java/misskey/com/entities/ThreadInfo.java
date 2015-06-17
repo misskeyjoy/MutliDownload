@@ -48,6 +48,10 @@ public class ThreadInfo {
         return start;
     }
 
+    public int getIsFinish() {
+        return isFinish;
+    }
+
     public void setUrl(String url) {
         this.url = url;
     }

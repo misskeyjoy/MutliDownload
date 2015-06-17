@@ -94,7 +94,7 @@ public class ThreadDAoImp implements  ThreadDAO {
     @Override
     public boolean isExits(String url, int thread_id) {
         SQLiteDatabase db=mHelper.getReadableDatabase();
-        Cursor cursor=db.rawQuery("select * from thread_info where url=? andt thread_id=?", new String[]{url,
+        Cursor cursor=db.rawQuery("select * from thread_info where url=? and thread_id=?", new String[]{url,
                   thread_id+""});
         boolean exits=cursor.moveToNext();
         cursor.close();
